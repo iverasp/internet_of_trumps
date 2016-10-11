@@ -16,6 +16,8 @@
 */
 var SensorTag = require('sensortag');
 var PythonShell = require('python-shell');
+//var http = require('http');
+//var Router = require('router');
 
 var log = function(text) {
   if(text) {
@@ -71,17 +73,69 @@ sensor.then(function(tag) {
   });
 });
 
+//var lights = function(enabled) {
+//  var command = enabled ? "on" : "off";
+//  log("turning lights " + command);
+//var request = require('request');
+//var router = Router();
+//
+//var cookieString = null;
+//
+//var authFormData = {
+//  uri: 'http://10.0.1.13:8083/ZAutomation/api/v1/login',
+//  method: 'POST',
+//  json: {
+//    "form": true,
+//    "login": "admin",
+//    "password": "WelcometoCX01",
+//    "keepme": false,
+//    "default_ui": 1
+//  }
+//};
+//
+///* GET home page. */
+//router.get('/', function(req, res, next) {
+//  log("in the get");
+//  var zWaveCommandPath = 'http://10.0.1.13:8083/ZAutomation/api/v1/devices/ZWayVDev_zway_5-0-37/command/' + command;
+//
+//  if(cookieString == null){
+//    request(authFormData, function(error, response, body) {
+//      cookieString = response.headers["set-cookie"][0];
+//    });
+//  }
+//
+//  var zWaveCommand = {
+//    url: zWaveCommandPath,
+//    headers: {
+//      'Cookie': cookieString
+//    }
+//  };
+//	log("starting req");
+//  request(zWaveCommand, function(error, response, body) {
+//	log("requesting...");
+//	log(error);
+//	log(response);
+//	log(body);
+//      res.send(error);
+//  });
+//});
+//}
+//
+//lights(true);
+
 // A simple example of an act on the irTemperature sensor.
+var flag = 0
 sensor.then(function(tag) {
   tag.on("irTemperatureChange", function(objectTemp, ambientTemp) {
-    if(objectTemp > 25) {
-      setTimeout(function() {
-        log("You're so hot");
-        PythonShell.run('main.py, function (err) {
-          if (err) throw err;
-          log('error!');
-        });
-      }, 60000); 
+    if(objectTemp > 25 && flag == 0) {
+      lights(true);
+      //flag = 1
+      log("You're so hot");
+      PythonShell.run('main.py', function (err, result) {
+        if (err) log("lol");
+	flag = 0;
+	//lights(false);
+      });
     }
   })
 });

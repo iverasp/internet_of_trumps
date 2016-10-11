@@ -1,11 +1,7 @@
 import os
 from gtts import gTTS
 import random
-from playsound import playsound
-import sys
-
-reload(sys)
-sys.setdefaultencoding('utf8')
+from subprocess import call
 
 
 trump = True
@@ -18,7 +14,7 @@ def say_random_quote(quotes):
     quote = random.choice(quotes)
     tts = gTTS(text=quote,lang='en')
     tts.save("quote.mp3")
-    playsound("quote.mp3")
+    call(["mpg123", "quote.mp3"])
 
 def main():
     quotes = get_quotes()
