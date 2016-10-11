@@ -2,6 +2,10 @@ import os
 from gtts import gTTS
 import random
 from playsound import playsound
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 trump = True
